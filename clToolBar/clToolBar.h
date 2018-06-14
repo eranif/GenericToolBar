@@ -30,6 +30,14 @@ public:
      * @brief add toolbar button
      */
     clToolBarButtonBase* Add(clToolBarButtonBase* button);
+    /**
+     * @brief insert a button after the button identified by 'otherButton'
+     * @param where insert the button after this button. 
+     * If 'where' == -1 our button is placed first insert first
+     * If 'where' == INT_MAX our button is placed last
+     * if a button with id == 'where' can not be found, we append the button
+     */
+    clToolBarButtonBase* InsertBefore(wxWindowID where, clToolBarButtonBase* button);
     clToolBarButtonBase* AddButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
     clToolBarButtonBase* AddMenuButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
 

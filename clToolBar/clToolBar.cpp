@@ -90,12 +90,6 @@ void clToolBar::OnPaint(wxPaintEvent& event)
     });
 }
 
-clToolBarButtonBase* clToolBar::Add(clToolBarButtonBase* button)
-{
-    m_buttons.push_back(button);
-    return button;
-}
-
 void clToolBar::OnEraseBackground(wxEraseEvent& event) { wxUnusedVar(event); }
 
 wxRect clToolBar::CalculateRect(wxDC& dc) const
@@ -193,3 +187,23 @@ clToolBarButtonBase* clToolBar::AddMenuButton(wxWindowID id, const wxBitmap& bmp
     clToolBarButtonBase* button = new clToolBarMenuButton(this, id, bmp, label);
     return Add(button);
 }
+
+clToolBarButtonBase* clToolBar::InsertBefore(wxWindowID where, clToolBarButtonBase* button)
+{
+    if(where == wxID_ANY) {
+        m_buttons.insert(m_buttons.begin(), button);
+    } else if(where == INT_MAX) {
+        m_buttons.push_back(button);
+    } else {
+        std::vector<clToolBarButtonBase*>::iterator iter = std::find_if(
+            m_buttons.begin(), m_buttons.end(), [&](clToolBarButtonBase* b) { return (b->GetId() == where); });
+        if(iter == m_buttons.end()) {
+            m_buttons.push_back(button);
+        } else {
+            m_buttons.insert(iter, button);
+        }
+    }
+    return button;
+}
+
+clToolBarButtonBase* clToolBar::Add(clToolBarButtonBase* button) { return InsertBefore(INT_MAX, button); }

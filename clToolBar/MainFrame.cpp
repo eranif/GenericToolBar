@@ -3,6 +3,7 @@
 #include "clToolBarButton.h"
 #include <wx/aboutdlg.h>
 #include <wx/msgdlg.h>
+#include "clToolBarMenuButton.h"
 
 MainFrame::MainFrame(wxWindow* parent)
     : MainFrameBaseClass(parent)
@@ -12,9 +13,11 @@ MainFrame::MainFrame(wxWindow* parent)
     m_toolbar->AddButton(wxID_OPEN, images.Bitmap("folder"));
     m_toolbar->AddButton(wxID_NEW, images.Bitmap("file"));
     m_toolbar->AddButton(XRCID("bookmark"), images.Bitmap("bookmark"), "Bookmark");
-    
+
     // Add button with menu
-    m_toolbar->AddMenuButton(XRCID("bookmark_menu"), images.Bitmap("bookmark"), "Menu!");
+    clToolBarMenuButton* menuButton =
+        new clToolBarMenuButton(m_toolbar, XRCID("bookmark_menu"), images.Bitmap("bookmark"), "Menu!");
+    m_toolbar->InsertBefore(XRCID("bookmark"), menuButton);
     m_toolbar->Realize();
 
     GetSizer()->Add(m_toolbar, 0, wxEXPAND, 0);
@@ -51,12 +54,6 @@ void MainFrame::OnFile(wxCommandEvent& e) { ::wxMessageBox("File clicked!"); }
 
 void MainFrame::OnBookmark(wxCommandEvent& e) { ::wxMessageBox("Bookmark clicked!"); }
 
-void MainFrame::OnBookmarkMenu(wxCommandEvent& e)
-{
-    ::wxMessageBox("Bookmark menu clicked!");
-}
+void MainFrame::OnBookmarkMenu(wxCommandEvent& e) { ::wxMessageBox("Bookmark menu clicked!"); }
 
-void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e)
-{
-    ::wxMessageBox("Bookmark menu (arrow) clicked!");
-}
+void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e) { ::wxMessageBox("Bookmark menu (arrow) clicked!"); }
