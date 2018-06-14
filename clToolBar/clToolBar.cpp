@@ -13,9 +13,7 @@ static wxColour GtkGetBgColourFromWidget(GtkWidget* widget, const wxColour& defa
 {
     wxColour bgColour = defaultColour;
     GtkStyle* def = gtk_rc_get_style(widget);
-    if(!def) {
-        def = gtk_widget_get_default_style();
-    }
+    if(!def) { def = gtk_widget_get_default_style(); }
 
     if(def) {
         GdkColor col = def->bg[GTK_STATE_NORMAL];
@@ -68,23 +66,22 @@ clToolBar::~clToolBar()
     Unbind(wxEVT_LEAVE_WINDOW, &clToolBar::OnLeaveWindow, this);
     Unbind(wxEVT_LEFT_DOWN, &clToolBar::OnLeftDown, this);
 
-    for(size_t i = 0; i < m_buttons.size(); ++i) {
-        delete m_buttons[i];
-    }
+    for(size_t i = 0; i < m_buttons.size(); ++i) { delete m_buttons[i]; }
     m_buttons.clear();
 }
 
 void clToolBar::OnPaint(wxPaintEvent& event)
 {
     wxBufferedPaintDC dc(this);
+    wxRect clientRect = GetClientRect();
     dc.SetBrush(GetMenuBarColour());
     dc.SetPen(GetMenuBarColour());
-    dc.DrawRectangle(GetClientRect());
+    dc.DrawRectangle(clientRect);
 
     int xx = 0;
     std::for_each(m_buttons.begin(), m_buttons.end(), [&](clToolBarButtonBase* button) {
         wxSize buttonSize = button->CalculateSize(dc);
-        wxRect r(xx, 0, buttonSize.GetWidth(), buttonSize.GetHeight());
+        wxRect r(xx, 0, buttonSize.GetWidth(), clientRect.GetHeight());
         button->Render(dc, r);
         xx += buttonSize.GetWidth();
     });
@@ -135,9 +132,7 @@ void clToolBar::OnLeftDown(wxMouseEvent& event)
     wxPoint pos = event.GetPosition();
     for(size_t i = 0; i < m_buttons.size(); ++i) {
         m_buttons[i]->ClearRenderFlags();
-        if(m_buttons[i]->Contains(pos)) {
-            m_buttons[i]->SetPressed(true);
-        }
+        if(m_buttons[i]->Contains(pos)) { m_buttons[i]->SetPressed(true); }
     }
     Refresh();
 }
@@ -161,18 +156,14 @@ void clToolBar::OnMotion(wxMouseEvent& event)
             m_buttons[i]->ClearRenderFlags();
         }
     }
-    if(refreshNeeded) {
-        Refresh();
-    }
+    if(refreshNeeded) { Refresh(); }
 }
 
 void clToolBar::OnEnterWindow(wxMouseEvent& event) { OnMotion(event); }
 
 void clToolBar::OnLeaveWindow(wxMouseEvent& event)
 {
-    for(size_t i = 0; i < m_buttons.size(); ++i) {
-        m_buttons[i]->ClearRenderFlags();
-    }
+    for(size_t i = 0; i < m_buttons.size(); ++i) { m_buttons[i]->ClearRenderFlags(); }
     Refresh();
 }
 
