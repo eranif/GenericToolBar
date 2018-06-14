@@ -4,8 +4,8 @@
 // Do not modify this file by hand!
 //////////////////////////////////////////////////////////////////////
 
-#ifndef _CLTOOLBAR_CLTOOLBAR_WXCRAFTER_BASE_CLASSES_H
-#define _CLTOOLBAR_CLTOOLBAR_WXCRAFTER_BASE_CLASSES_H
+#ifndef _GENERICTOOLBAR_CLTOOLBAR_WXCRAFTER_BASE_CLASSES_H
+#define _GENERICTOOLBAR_CLTOOLBAR_WXCRAFTER_BASE_CLASSES_H
 
 #include <wx/settings.h>
 #include <wx/xrc/xmlres.h>

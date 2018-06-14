@@ -9,8 +9,8 @@ MainFrame::MainFrame(wxWindow* parent)
 {
     MyImages images;
     m_toolbar = new clToolBar(this);
-    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_OPEN, images.Bitmap("folder"), "Folder"));
-    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_NEW, images.Bitmap("file"), "File"));
+    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_OPEN, images.Bitmap("folder")));
+    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_NEW, images.Bitmap("file")));
     m_toolbar->Add(new clToolBarButton(m_toolbar, XRCID("bookmark"), images.Bitmap("bookmark"), "Bookmark"));
     m_toolbar->Realize();
 

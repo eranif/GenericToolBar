@@ -414,7 +414,7 @@
 						}, {
 							"type":	"filePicker",
 							"m_label":	"Bitmap File:",
-							"m_path":	"../../../devl/codelite/bitmaps/16-folder.png"
+							"m_path":	"../images/24-folder.png"
 						}],
 					"m_events":	[],
 					"m_children":	[]
@@ -433,7 +433,7 @@
 						}, {
 							"type":	"filePicker",
 							"m_label":	"Bitmap File:",
-							"m_path":	"../../../devl/codelite/bitmaps/16-file_new.png"
+							"m_path":	"../images/24-file_new.png"
 						}],
 					"m_events":	[],
 					"m_children":	[]
@@ -452,7 +452,7 @@
 						}, {
 							"type":	"filePicker",
 							"m_label":	"Bitmap File:",
-							"m_path":	"../../../devl/codelite/bitmaps/16-bookmark.png"
+							"m_path":	"../images/24-bookmark.png"
 						}],
 					"m_events":	[],
 					"m_children":	[]

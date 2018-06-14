@@ -95,18 +95,6 @@ MyImages::MyImages()
             m_bitmaps.insert(std::make_pair(wxT("folder"), bmp));
         }
     }
-    {
-        wxBitmap bmp;
-        wxIcon icn;
-        bmp = wxXmlResource::Get()->LoadBitmap(wxT("folder@2x"));
-        if(bmp.IsOk()) {
-            if((m_imagesWidth == bmp.GetWidth()) && (m_imagesHeight == bmp.GetHeight())){
-                icn.CopyFromBitmap(bmp);
-                this->Add(icn);
-            }
-            m_bitmaps.insert(std::make_pair(wxT("folder@2x"), bmp));
-        }
-    }
     
     {
         wxBitmap bmp;
@@ -120,18 +108,6 @@ MyImages::MyImages()
             m_bitmaps.insert(std::make_pair(wxT("file"), bmp));
         }
     }
-    {
-        wxBitmap bmp;
-        wxIcon icn;
-        bmp = wxXmlResource::Get()->LoadBitmap(wxT("file@2x"));
-        if(bmp.IsOk()) {
-            if((m_imagesWidth == bmp.GetWidth()) && (m_imagesHeight == bmp.GetHeight())){
-                icn.CopyFromBitmap(bmp);
-                this->Add(icn);
-            }
-            m_bitmaps.insert(std::make_pair(wxT("file@2x"), bmp));
-        }
-    }
     
     {
         wxBitmap bmp;
@@ -143,18 +119,6 @@ MyImages::MyImages()
                 this->Add(icn);
             }
             m_bitmaps.insert(std::make_pair(wxT("bookmark"), bmp));
-        }
-    }
-    {
-        wxBitmap bmp;
-        wxIcon icn;
-        bmp = wxXmlResource::Get()->LoadBitmap(wxT("bookmark@2x"));
-        if(bmp.IsOk()) {
-            if((m_imagesWidth == bmp.GetWidth()) && (m_imagesHeight == bmp.GetHeight())){
-                icn.CopyFromBitmap(bmp);
-                this->Add(icn);
-            }
-            m_bitmaps.insert(std::make_pair(wxT("bookmark@2x"), bmp));
         }
     }
     
