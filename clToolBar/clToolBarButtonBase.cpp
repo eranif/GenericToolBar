@@ -2,6 +2,7 @@
 #include <wx/settings.h>
 
 wxDEFINE_EVENT(wxEVT_TOOLBAR_BUTTON_CLICKED, wxCommandEvent);
+wxDEFINE_EVENT(wxEVT_TOOLBAR_BUTTON_MENU_CLICKED, wxCommandEvent);
 
 clToolBarButtonBase::clToolBarButtonBase(
     clToolBar* parent, wxWindowID id, const wxBitmap& bmp, const wxString& label, size_t flags)
@@ -26,7 +27,7 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
 
     wxColour bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
     if(IsHover()) {
-        bgColour = penColour.ChangeLightness(110);
+        bgColour = penColour.ChangeLightness(125);
     } else if(IsPressed()) {
         bgColour = penColour;
     }
@@ -58,8 +59,13 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
     }
 
     // Do we need to draw a drop down arrow?
-    if(m_flags & kHasMenu) {
+    if(HasMenu()) {
         // draw a drop down menu
+        m_dropDownArrowRect =
+            wxRect(xx, rect.GetY(), (2 * CL_TOOL_BAR_X_MARGIN) + CL_TOOL_BAR_DROPDOWN_ARROW_SIZE, rect.GetHeight());
+        dc.DrawLine(wxPoint(xx, rect.GetY()), wxPoint(xx, rect.GetY() + rect.GetHeight()));
+        xx += CL_TOOL_BAR_X_MARGIN;
+
         wxPoint points[3];
         points[0].x = xx;
         points[0].y = (rect.GetHeight() - CL_TOOL_BAR_DROPDOWN_ARROW_SIZE) / 2 + rect.GetY();
@@ -73,7 +79,7 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
         dc.SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUTEXT));
         dc.DrawPolygon(3, points);
 
-        m_dropDownArrowRect = wxRect(xx + rect.GetX(), rect.GetY(), CL_TOOL_BAR_DROPDOWN_ARROW_SIZE, rect.GetHeight());
+        xx += CL_TOOL_BAR_DROPDOWN_ARROW_SIZE;
         xx += CL_TOOL_BAR_X_MARGIN;
     }
 }

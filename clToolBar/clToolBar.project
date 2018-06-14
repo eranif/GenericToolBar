@@ -4,6 +4,8 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="Toolbar">
+      <File Name="clToolBarMenuButton.cpp"/>
+      <File Name="clToolBarMenuButton.h"/>
       <File Name="clToolBarButton.cpp"/>
       <File Name="clToolBarButton.h"/>
       <File Name="codelite_exports.h"/>

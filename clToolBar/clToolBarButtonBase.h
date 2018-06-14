@@ -74,6 +74,8 @@ public:
     clToolBar* GetToolbar() { return m_toolbar; }
 
     bool Contains(const wxPoint& pt) const { return m_buttonRect.Contains(pt); }
+    bool InsideMenuButton(const wxPoint& pt) const { return m_dropDownArrowRect.Contains(pt); }
+
     void SetRenderFlags(size_t flags) { m_renderFlags = flags; }
     bool IsHover() const { return m_renderFlags & kHover; }
     bool IsPressed() const { return m_renderFlags & kPressed; }
@@ -88,8 +90,10 @@ public:
         EnableRenderFlag(kPressed, b);
     }
     void ClearRenderFlags() { m_renderFlags = 0; }
+    const wxRect& GetButtonRect() const { return m_buttonRect; }
 };
 
 wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_SDK, wxEVT_TOOLBAR_BUTTON_CLICKED, wxCommandEvent);
+wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_SDK, wxEVT_TOOLBAR_BUTTON_MENU_CLICKED, wxCommandEvent);
 
 #endif // CLTOOLBARBUTTONBASE_H

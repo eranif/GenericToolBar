@@ -17,5 +17,7 @@ public:
     void OnFolder(wxCommandEvent& e);
     void OnFile(wxCommandEvent& e);
     void OnBookmark(wxCommandEvent& e);
+    void OnBookmarkMenu(wxCommandEvent& e);
+    void OnBookmarkMenuPart(wxCommandEvent& e);
 };
 #endif // MAINFRAME_H

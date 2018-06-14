@@ -11,7 +11,9 @@ static wxColour GtkGetBgColourFromWidget(GtkWidget* widget, const wxColour& defa
 {
     wxColour bgColour = defaultColour;
     GtkStyle* def = gtk_rc_get_style(widget);
-    if(!def) { def = gtk_widget_get_default_style(); }
+    if(!def) {
+        def = gtk_widget_get_default_style();
+    }
 
     if(def) {
         GdkColor col = def->bg[GTK_STATE_NORMAL];
@@ -113,9 +115,15 @@ void clToolBar::OnLeftUp(wxMouseEvent& event)
     wxPoint pos = event.GetPosition();
     for(size_t i = 0; i < m_buttons.size(); ++i) {
         if(m_buttons[i]->Contains(pos)) {
-            wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_CLICKED, m_buttons[i]->GetId());
-            clicked.SetEventObject(this);
-            GetEventHandler()->AddPendingEvent(clicked);
+            if(m_buttons[i]->InsideMenuButton(pos)) {
+                wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_MENU_CLICKED, m_buttons[i]->GetId());
+                clicked.SetEventObject(this);
+                GetEventHandler()->AddPendingEvent(clicked);
+            } else {
+                wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_CLICKED, m_buttons[i]->GetId());
+                clicked.SetEventObject(this);
+                GetEventHandler()->AddPendingEvent(clicked);
+            }
             break;
         }
     }
