@@ -116,6 +116,10 @@ void clToolBar::OnLeftUp(wxMouseEvent& event)
     for(size_t i = 0; i < m_buttons.size(); ++i) {
         clToolBarButtonBase* btn = m_buttons[i];
         if(btn->Contains(pos)) {
+            if(!btn->IsEnabled()) {
+                // events are not fired for disabled buttons
+                return;
+            }
             if(btn->IsToggle()) {
                 // Change the button state
                 btn->Check(!btn->IsChecked());

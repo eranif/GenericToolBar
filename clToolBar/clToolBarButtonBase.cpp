@@ -22,21 +22,30 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
     m_dropDownArrowRect = wxRect();
     m_buttonRect = rect;
 
-    wxColour penColour = (IsHover() || IsPressed() || IsChecked())
-        ? wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT)
-        : wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
+    wxColour penColour;
+    wxColour bgColour;
+    wxColour textColour;
 
-    wxColour bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
-    if(IsHover() || IsChecked()) {
-        bgColour = penColour.ChangeLightness(125);
-    } else if(IsPressed()) {
+    if(IsEnabled()) {
+        penColour = (IsHover() || IsPressed() || IsChecked()) ? wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT)
+                                                              : wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
+
+        bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
+        if(IsHover() || IsChecked()) {
+            bgColour = penColour.ChangeLightness(125);
+        } else if(IsPressed()) {
+            bgColour = penColour;
+        }
+
+        textColour = (IsHover() || IsPressed() || IsChecked()) ? wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT)
+                                                               : wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
+    } else {
+        // A disabled button
+        penColour = wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
         bgColour = penColour;
+        textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT);
     }
-
-    wxColour textColour = (IsHover() || IsPressed() || IsChecked())
-        ? wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT)
-        : wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
-
+    
     dc.SetBrush(bgColour);
     dc.SetPen(penColour);
     dc.DrawRectangle(rect);
@@ -46,9 +55,13 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
     xx += CL_TOOL_BAR_X_MARGIN;
 
     if(m_bmp.IsOk()) {
-        yy = (rect.GetHeight() - m_bmp.GetScaledHeight()) / 2 + rect.GetY();
-        dc.DrawBitmap(m_bmp, wxPoint(xx, yy));
-        xx += m_bmp.GetScaledWidth();
+        wxBitmap bmp(m_bmp);
+        if(!IsEnabled()) {
+            bmp = m_bmp.ConvertToDisabled();
+        }
+        yy = (rect.GetHeight() - bmp.GetScaledHeight()) / 2 + rect.GetY();
+        dc.DrawBitmap(bmp, wxPoint(xx, yy));
+        xx += bmp.GetScaledWidth();
         xx += CL_TOOL_BAR_X_MARGIN;
     }
 
@@ -78,8 +91,8 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
 
         points[2].x = xx + (CL_TOOL_BAR_DROPDOWN_ARROW_SIZE / 2);
         points[2].y = points[0].y + CL_TOOL_BAR_DROPDOWN_ARROW_SIZE;
-        dc.SetPen(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUTEXT));
-        dc.SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUTEXT));
+        dc.SetPen(textColour);
+        dc.SetBrush(textColour);
         dc.DrawPolygon(3, points);
 
         xx += CL_TOOL_BAR_DROPDOWN_ARROW_SIZE;

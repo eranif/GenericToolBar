@@ -27,6 +27,7 @@ public:
         kHasMenu = (1 << 0),
         kToggleButton = (1 << 1),
         kChecked = (1 << 2),
+        kDisabled = (1 << 3),
     };
 
     enum eRenderFlags {
@@ -84,7 +85,7 @@ public:
     wxWindowID GetId() const { return m_id; }
     clToolBar* GetToolbar() { return m_toolbar; }
 
-    bool Contains(const wxPoint& pt) const { return m_buttonRect.Contains(pt); }
+    virtual bool Contains(const wxPoint& pt) const { return m_buttonRect.Contains(pt); }
     bool InsideMenuButton(const wxPoint& pt) const { return HasMenu() && (m_dropDownArrowRect.Contains(pt)); }
 
     void SetRenderFlags(size_t flags) { m_renderFlags = flags; }
@@ -105,6 +106,8 @@ public:
     bool IsChecked() const { return (m_flags & kChecked); }
     void Check(bool b) { EnableFlag(kChecked, b); }
     bool IsToggle() const { return (m_flags & kToggleButton); }
+    bool IsEnabled() const { return !(m_flags & kDisabled); }
+    void Enable(bool b) { EnableFlag(kDisabled, !b); }
     template <typename T>
     T* Cast()
     {
