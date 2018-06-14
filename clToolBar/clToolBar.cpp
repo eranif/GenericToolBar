@@ -243,3 +243,15 @@ clToolBarButtonBase* clToolBar::FindById(wxWindowID id) const
     if(iter == m_buttons.end()) { return NULL; }
     return (*iter);
 }
+
+bool clToolBar::DeleteById(wxWindowID id)
+{
+    std::vector<clToolBarButtonBase*>::iterator iter
+        = std::find_if(m_buttons.begin(), m_buttons.end(), [&](clToolBarButtonBase* b) { return (b->GetId() == id); });
+    if(iter == m_buttons.end()) { return false; }
+    clToolBarButtonBase* button = (*iter);
+    delete button;
+    m_buttons.erase(iter);
+    Refresh();
+    return true;
+}

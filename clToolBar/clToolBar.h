@@ -63,6 +63,13 @@ public:
      * @brief find a button by ID
      */
     clToolBarButtonBase* FindById(wxWindowID id) const;
+    
+    /**
+     * @brief delete a button identified by 'id'
+     * @param id the button id
+     * @return true on success, false otherwise
+     */
+    bool DeleteById(wxWindowID id);
 };
 
 #endif // CLTOOLBAR_H
