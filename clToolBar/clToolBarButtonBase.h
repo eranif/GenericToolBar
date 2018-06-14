@@ -25,6 +25,8 @@ protected:
 public:
     enum eFlags {
         kHasMenu = (1 << 0),
+        kToggleButton = (1 << 1),
+        kChecked = (1 << 2),
     };
 
     enum eRenderFlags {
@@ -60,6 +62,15 @@ protected:
         }
     }
 
+    void EnableFlag(clToolBarButtonBase::eFlags f, bool b)
+    {
+        if(b) {
+            m_flags |= f;
+        } else {
+            m_flags &= ~f;
+        }
+    }
+
 public:
     void SetBmp(const wxBitmap& bmp) { this->m_bmp = bmp; }
     void SetLabel(const wxString& label) { this->m_label = label; }
@@ -74,7 +85,7 @@ public:
     clToolBar* GetToolbar() { return m_toolbar; }
 
     bool Contains(const wxPoint& pt) const { return m_buttonRect.Contains(pt); }
-    bool InsideMenuButton(const wxPoint& pt) const { return m_dropDownArrowRect.Contains(pt); }
+    bool InsideMenuButton(const wxPoint& pt) const { return HasMenu() && (m_dropDownArrowRect.Contains(pt)); }
 
     void SetRenderFlags(size_t flags) { m_renderFlags = flags; }
     bool IsHover() const { return m_renderFlags & kHover; }
@@ -91,6 +102,9 @@ public:
     }
     void ClearRenderFlags() { m_renderFlags = 0; }
     const wxRect& GetButtonRect() const { return m_buttonRect; }
+    bool IsChecked() const { return (m_flags & kChecked); }
+    void Check(bool b) { EnableFlag(kChecked, b); }
+    bool IsToggle() const { return (m_flags & kToggleButton); }
 };
 
 wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_SDK, wxEVT_TOOLBAR_BUTTON_CLICKED, wxCommandEvent);

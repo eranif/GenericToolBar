@@ -4,6 +4,8 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="Toolbar">
+      <File Name="clToolBarToggleButton.cpp"/>
+      <File Name="clToolBarToggleButton.h"/>
       <File Name="clToolBarMenuButton.cpp"/>
       <File Name="clToolBarMenuButton.h"/>
       <File Name="clToolBarButton.cpp"/>

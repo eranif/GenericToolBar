@@ -6,6 +6,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
+#include "clToolBarToggleButton.h"
 
 #ifdef __WXGTK__
 #include <gtk/gtk.h>
@@ -46,6 +47,7 @@ static wxColour GetMenuBarColour()
 clToolBar::clToolBar(
     wxWindow* parent, wxWindowID winid, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
     : wxPanel(parent, winid, pos, size, style, name)
+    , m_popupShown(false)
 {
     Bind(wxEVT_PAINT, &clToolBar::OnPaint, this);
     Bind(wxEVT_ERASE_BACKGROUND, &clToolBar::OnEraseBackground, this);
@@ -112,13 +114,22 @@ void clToolBar::OnLeftUp(wxMouseEvent& event)
 {
     wxPoint pos = event.GetPosition();
     for(size_t i = 0; i < m_buttons.size(); ++i) {
-        if(m_buttons[i]->Contains(pos)) {
-            if(m_buttons[i]->InsideMenuButton(pos)) {
-                wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_MENU_CLICKED, m_buttons[i]->GetId());
+        clToolBarButtonBase* btn = m_buttons[i];
+        if(btn->Contains(pos)) {
+            if(btn->IsToggle()) {
+                // Change the button state
+                btn->Check(!btn->IsChecked());
+                // Fire an event with proper IsChecked() set
+                wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_CLICKED, btn->GetId());
+                clicked.SetEventObject(this);
+                clicked.SetInt(btn->IsChecked() ? 1 : 0);
+                GetEventHandler()->AddPendingEvent(clicked);
+            } else if(btn->InsideMenuButton(pos)) {
+                wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_MENU_CLICKED, btn->GetId());
                 clicked.SetEventObject(this);
                 GetEventHandler()->AddPendingEvent(clicked);
             } else {
-                wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_CLICKED, m_buttons[i]->GetId());
+                wxCommandEvent clicked(wxEVT_TOOLBAR_BUTTON_CLICKED, btn->GetId());
                 clicked.SetEventObject(this);
                 GetEventHandler()->AddPendingEvent(clicked);
             }
@@ -163,8 +174,10 @@ void clToolBar::OnEnterWindow(wxMouseEvent& event) { OnMotion(event); }
 
 void clToolBar::OnLeaveWindow(wxMouseEvent& event)
 {
-    for(size_t i = 0; i < m_buttons.size(); ++i) { m_buttons[i]->ClearRenderFlags(); }
-    Refresh();
+    if(!m_popupShown) {
+        for(size_t i = 0; i < m_buttons.size(); ++i) { m_buttons[i]->ClearRenderFlags(); }
+        Refresh();
+    }
 }
 
 clToolBarButtonBase* clToolBar::AddButton(wxWindowID id, const wxBitmap& bmp, const wxString& label)
@@ -176,6 +189,12 @@ clToolBarButtonBase* clToolBar::AddButton(wxWindowID id, const wxBitmap& bmp, co
 clToolBarButtonBase* clToolBar::AddMenuButton(wxWindowID id, const wxBitmap& bmp, const wxString& label)
 {
     clToolBarButtonBase* button = new clToolBarMenuButton(this, id, bmp, label);
+    return Add(button);
+}
+
+clToolBarButtonBase* clToolBar::AddToggleButton(wxWindowID id, const wxBitmap& bmp, const wxString& label)
+{
+    clToolBarButtonBase* button = new clToolBarToggleButton(this, id, bmp, label);
     return Add(button);
 }
 
@@ -205,5 +224,14 @@ void clToolBar::ShowMenuForButton(wxWindowID buttonID, wxMenu* menu)
         m_buttons.begin(), m_buttons.end(), [&](clToolBarButtonBase* b) { return (b->GetId() == buttonID); });
     if(iter == m_buttons.end()) { return; }
     clToolBarButtonBase* button = *iter;
+    m_popupShown = true;
     PopupMenu(menu, button->GetButtonRect().GetBottomLeft());
+    m_popupShown = false;
+
+    wxPoint pt = ::wxGetMousePosition();
+    pt = ScreenToClient(pt);
+    if(!GetClientRect().Contains(pt)) {
+        wxMouseEvent dummy;
+        OnLeaveWindow(dummy);
+    }
 }

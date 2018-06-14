@@ -1,10 +1,10 @@
 #include "MainFrame.h"
 #include "clToolBar.h"
 #include "clToolBarButton.h"
-#include <wx/aboutdlg.h>
-#include <wx/msgdlg.h>
 #include "clToolBarMenuButton.h"
+#include <wx/aboutdlg.h>
 #include <wx/menu.h>
+#include <wx/msgdlg.h>
 
 MainFrame::MainFrame(wxWindow* parent)
     : MainFrameBaseClass(parent)
@@ -13,17 +13,19 @@ MainFrame::MainFrame(wxWindow* parent)
     m_toolbar = new clToolBar(this);
     m_toolbar->AddButton(wxID_OPEN, images.Bitmap("folder"));
     m_toolbar->AddButton(wxID_NEW, images.Bitmap("file"));
+    m_toolbar->AddToggleButton(wxID_BOLD, wxNullBitmap, "Check Me!");
     m_toolbar->AddButton(XRCID("bookmark"), images.Bitmap("bookmark"), "Bookmark");
 
     // Add button with menu
-    clToolBarMenuButton* menuButton =
-        new clToolBarMenuButton(m_toolbar, XRCID("bookmark_menu"), images.Bitmap("bookmark"), "Menu!");
+    clToolBarMenuButton* menuButton
+        = new clToolBarMenuButton(m_toolbar, XRCID("bookmark_menu"), images.Bitmap("bookmark"), "Menu!");
     m_toolbar->InsertBefore(XRCID("bookmark"), menuButton);
     m_toolbar->Realize();
 
     GetSizer()->Add(m_toolbar, 0, wxEXPAND, 0);
     SetSize(600, 400);
 
+    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnToggleButton, this, wxID_BOLD);
     m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnFolder, this, wxID_OPEN);
     m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnFile, this, wxID_NEW);
     m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnBookmark, this, XRCID("bookmark"));
@@ -55,15 +57,20 @@ void MainFrame::OnFile(wxCommandEvent& e) { ::wxMessageBox("File clicked!"); }
 
 void MainFrame::OnBookmark(wxCommandEvent& e) { ::wxMessageBox("Bookmark clicked!"); }
 
-void MainFrame::OnBookmarkMenu(wxCommandEvent& e) { ::wxMessageBox("Bookmark menu clicked!"); }
+void MainFrame::OnBookmarkMenu(wxCommandEvent& e) { ::wxMessageBox("Menu clicked!"); }
 
-void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e) 
-{  
+void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e)
+{
     wxMenu menu;
-    menu.Append(wxID_OPEN);
-    menu.Append(wxID_CLOSE);
+    menu.Append(wxID_ABOUT);
     menu.AppendSeparator();
-    menu.Append(wxID_CLOSE_ALL);
-    
+    menu.Append(wxID_EXIT);
     m_toolbar->ShowMenuForButton(XRCID("bookmark_menu"), &menu);
+}
+
+void MainFrame::OnToggleButton(wxCommandEvent& e)
+{
+    wxString message;
+    message << "Button is now: " << (e.IsChecked() ? "checked" : "unchecked");
+    ::wxMessageBox(message);
 }

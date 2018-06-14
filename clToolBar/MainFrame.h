@@ -14,6 +14,7 @@ public:
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
+    void OnToggleButton(wxCommandEvent& e);
     void OnFolder(wxCommandEvent& e);
     void OnFile(wxCommandEvent& e);
     void OnBookmark(wxCommandEvent& e);

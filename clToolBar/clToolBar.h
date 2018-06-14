@@ -9,6 +9,7 @@ class clToolBarButtonBase;
 class WXDLLIMPEXP_SDK clToolBar : public wxPanel
 {
     std::vector<clToolBarButtonBase*> m_buttons;
+    bool m_popupShown;
 
 protected:
     void OnPaint(wxPaintEvent& event);
@@ -32,7 +33,7 @@ public:
     clToolBarButtonBase* Add(clToolBarButtonBase* button);
     /**
      * @brief insert a button after the button identified by 'otherButton'
-     * @param where insert the button after this button. 
+     * @param where insert the button after this button.
      * If 'where' == -1 our button is placed first insert first
      * If 'where' == INT_MAX our button is placed last
      * if a button with id == 'where' can not be found, we append the button
@@ -40,12 +41,13 @@ public:
     clToolBarButtonBase* InsertBefore(wxWindowID where, clToolBarButtonBase* button);
     clToolBarButtonBase* AddButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
     clToolBarButtonBase* AddMenuButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
+    clToolBarButtonBase* AddToggleButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
 
     /**
      * @brief This function should be called after you have added tools.
      */
     void Realize();
-    
+
     /**
      * @brief show a drop down menu for a button
      */

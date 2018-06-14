@@ -22,18 +22,21 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
     m_dropDownArrowRect = wxRect();
     m_buttonRect = rect;
 
-    wxColour penColour = (IsHover() || IsPressed()) ? wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT) :
-                                                      wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
+    wxColour penColour = (IsHover() || IsPressed() || IsChecked())
+        ? wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT)
+        : wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
 
     wxColour bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
-    if(IsHover()) {
+    if(IsHover() || IsChecked()) {
         bgColour = penColour.ChangeLightness(125);
     } else if(IsPressed()) {
         bgColour = penColour;
     }
 
-    wxColour textColour = (IsHover() || IsPressed()) ? wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT) :
-                                                       wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
+    wxColour textColour = (IsHover() || IsPressed() || IsChecked())
+        ? wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT)
+        : wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
+
     dc.SetBrush(bgColour);
     dc.SetPen(penColour);
     dc.DrawRectangle(rect);
@@ -61,8 +64,8 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
     // Do we need to draw a drop down arrow?
     if(HasMenu()) {
         // draw a drop down menu
-        m_dropDownArrowRect =
-            wxRect(xx, rect.GetY(), (2 * CL_TOOL_BAR_X_MARGIN) + CL_TOOL_BAR_DROPDOWN_ARROW_SIZE, rect.GetHeight());
+        m_dropDownArrowRect
+            = wxRect(xx, rect.GetY(), (2 * CL_TOOL_BAR_X_MARGIN) + CL_TOOL_BAR_DROPDOWN_ARROW_SIZE, rect.GetHeight());
         dc.DrawLine(wxPoint(xx, rect.GetY()), wxPoint(xx, rect.GetY() + rect.GetHeight()));
         xx += CL_TOOL_BAR_X_MARGIN;
 
