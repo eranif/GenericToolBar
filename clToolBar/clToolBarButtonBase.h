@@ -105,6 +105,11 @@ public:
     bool IsChecked() const { return (m_flags & kChecked); }
     void Check(bool b) { EnableFlag(kChecked, b); }
     bool IsToggle() const { return (m_flags & kToggleButton); }
+    template <typename T>
+    T* Cast()
+    {
+        return dynamic_cast<T*>(this);
+    }
 };
 
 wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_SDK, wxEVT_TOOLBAR_BUTTON_CLICKED, wxCommandEvent);

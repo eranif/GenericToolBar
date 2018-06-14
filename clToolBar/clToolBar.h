@@ -26,7 +26,13 @@ public:
         const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL | wxNO_BORDER,
         const wxString& name = "clToolBar");
     virtual ~clToolBar();
-
+    
+    /**
+     * @brief return all the buttons
+     */
+    std::vector<clToolBarButtonBase*>& GetButtons() { return m_buttons; };
+    const std::vector<clToolBarButtonBase*>& GetButtons() const { return m_buttons; }
+    
     /**
      * @brief add toolbar button
      */
@@ -52,6 +58,11 @@ public:
      * @brief show a drop down menu for a button
      */
     void ShowMenuForButton(wxWindowID buttonID, wxMenu* menu);
+    
+    /**
+     * @brief find a button by ID
+     */
+    clToolBarButtonBase* FindById(wxWindowID id) const;
 };
 
 #endif // CLTOOLBAR_H

@@ -5,6 +5,7 @@
 #include <wx/aboutdlg.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
+#include "clToolBarToggleButton.h"
 
 MainFrame::MainFrame(wxWindow* parent)
     : MainFrameBaseClass(parent)
@@ -70,7 +71,10 @@ void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e)
 
 void MainFrame::OnToggleButton(wxCommandEvent& e)
 {
-    wxString message;
-    message << "Button is now: " << (e.IsChecked() ? "checked" : "unchecked");
-    ::wxMessageBox(message);
+    clToolBarButtonBase* button = m_toolbar->FindById(e.GetId());
+    if(button) {
+        clToolBarToggleButton* toggle = button->Cast<clToolBarToggleButton>();
+        toggle->SetLabel(e.IsChecked() ? "Checked" : "Unchecked");
+        m_toolbar->Refresh();
+    }
 }

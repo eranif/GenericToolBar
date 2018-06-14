@@ -2,11 +2,11 @@
 #include "clToolBarButton.h"
 #include "clToolBarButtonBase.h"
 #include "clToolBarMenuButton.h"
+#include "clToolBarToggleButton.h"
 #include <algorithm>
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
-#include "clToolBarToggleButton.h"
 
 #ifdef __WXGTK__
 #include <gtk/gtk.h>
@@ -234,4 +234,12 @@ void clToolBar::ShowMenuForButton(wxWindowID buttonID, wxMenu* menu)
         wxMouseEvent dummy;
         OnLeaveWindow(dummy);
     }
+}
+
+clToolBarButtonBase* clToolBar::FindById(wxWindowID id) const
+{
+    std::vector<clToolBarButtonBase*>::const_iterator iter
+        = std::find_if(m_buttons.begin(), m_buttons.end(), [&](clToolBarButtonBase* b) { return (b->GetId() == id); });
+    if(iter == m_buttons.end()) { return NULL; }
+    return (*iter);
 }
