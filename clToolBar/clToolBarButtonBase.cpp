@@ -26,7 +26,7 @@ void clToolBarButtonBase::Render(wxDC& dc, const wxRect& rect)
 
     wxColour bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
     if(IsHover()) {
-        bgColour = penColour.ChangeLightness(135);
+        bgColour = penColour.ChangeLightness(110);
     } else if(IsPressed()) {
         bgColour = penColour;
     }

@@ -5,6 +5,42 @@
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
 
+#ifdef __WXGTK__
+#include <gtk/gtk.h>
+static wxColour GtkGetBgColourFromWidget(GtkWidget* widget, const wxColour& defaultColour)
+{
+    wxColour bgColour = defaultColour;
+    GtkStyle* def = gtk_rc_get_style(widget);
+    if(!def) { def = gtk_widget_get_default_style(); }
+
+    if(def) {
+        GdkColor col = def->bg[GTK_STATE_NORMAL];
+        bgColour = wxColour(col);
+    }
+    gtk_widget_destroy(widget);
+    return bgColour;
+}
+#endif
+
+static wxColour GetMenuBarColour()
+{
+#if defined(__WXGTK__) && !defined(__WXGTK3__)
+    static bool intitialized(false);
+    // initialise default colour
+    static wxColour bgColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
+
+    if(!intitialized) {
+        // try to get the background colour from a menu
+        GtkWidget* menuBar = gtk_menu_bar_new();
+        bgColour = GtkGetBgColourFromWidget(menuBar, bgColour);
+        intitialized = true;
+    }
+    return bgColour;
+#else
+    return wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
+#endif
+}
+
 clToolBar::clToolBar(
     wxWindow* parent, wxWindowID winid, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
     : wxPanel(parent, winid, pos, size, style, name)
@@ -32,8 +68,8 @@ clToolBar::~clToolBar()
 void clToolBar::OnPaint(wxPaintEvent& event)
 {
     wxBufferedPaintDC dc(this);
-    dc.SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
-    dc.SetPen(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
+    dc.SetBrush(GetMenuBarColour());
+    dc.SetPen(GetMenuBarColour());
     dc.DrawRectangle(GetClientRect());
 
     int xx = 0;
