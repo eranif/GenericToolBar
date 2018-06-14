@@ -4,6 +4,7 @@
 #include <wx/aboutdlg.h>
 #include <wx/msgdlg.h>
 #include "clToolBarMenuButton.h"
+#include <wx/menu.h>
 
 MainFrame::MainFrame(wxWindow* parent)
     : MainFrameBaseClass(parent)
@@ -56,4 +57,13 @@ void MainFrame::OnBookmark(wxCommandEvent& e) { ::wxMessageBox("Bookmark clicked
 
 void MainFrame::OnBookmarkMenu(wxCommandEvent& e) { ::wxMessageBox("Bookmark menu clicked!"); }
 
-void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e) { ::wxMessageBox("Bookmark menu (arrow) clicked!"); }
+void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e) 
+{  
+    wxMenu menu;
+    menu.Append(wxID_OPEN);
+    menu.Append(wxID_CLOSE);
+    menu.AppendSeparator();
+    menu.Append(wxID_CLOSE_ALL);
+    
+    m_toolbar->ShowMenuForButton(XRCID("bookmark_menu"), &menu);
+}

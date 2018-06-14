@@ -198,3 +198,12 @@ clToolBarButtonBase* clToolBar::InsertBefore(wxWindowID where, clToolBarButtonBa
 }
 
 clToolBarButtonBase* clToolBar::Add(clToolBarButtonBase* button) { return InsertBefore(INT_MAX, button); }
+
+void clToolBar::ShowMenuForButton(wxWindowID buttonID, wxMenu* menu)
+{
+    std::vector<clToolBarButtonBase*>::iterator iter = std::find_if(
+        m_buttons.begin(), m_buttons.end(), [&](clToolBarButtonBase* b) { return (b->GetId() == buttonID); });
+    if(iter == m_buttons.end()) { return; }
+    clToolBarButtonBase* button = *iter;
+    PopupMenu(menu, button->GetButtonRect().GetBottomLeft());
+}

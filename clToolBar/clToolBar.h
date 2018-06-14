@@ -45,6 +45,11 @@ public:
      * @brief This function should be called after you have added tools.
      */
     void Realize();
+    
+    /**
+     * @brief show a drop down menu for a button
+     */
+    void ShowMenuForButton(wxWindowID buttonID, wxMenu* menu);
 };
 
 #endif // CLTOOLBAR_H
