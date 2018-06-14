@@ -1,11 +1,11 @@
 #include "clToolBar.h"
+#include "clToolBarButton.h"
 #include "clToolBarButtonBase.h"
+#include "clToolBarMenuButton.h"
 #include <algorithm>
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
-#include "clToolBarButton.h"
-#include "clToolBarMenuButton.h"
 
 #ifdef __WXGTK__
 #include <gtk/gtk.h>
@@ -67,6 +67,11 @@ clToolBar::~clToolBar()
     Unbind(wxEVT_ENTER_WINDOW, &clToolBar::OnEnterWindow, this);
     Unbind(wxEVT_LEAVE_WINDOW, &clToolBar::OnLeaveWindow, this);
     Unbind(wxEVT_LEFT_DOWN, &clToolBar::OnLeftDown, this);
+
+    for(size_t i = 0; i < m_buttons.size(); ++i) {
+        delete m_buttons[i];
+    }
+    m_buttons.clear();
 }
 
 void clToolBar::OnPaint(wxPaintEvent& event)
