@@ -1,0 +1,95 @@
+#ifndef CLTOOLBARBUTTONBASE_H
+#define CLTOOLBARBUTTONBASE_H
+
+#include "clToolBar.h"
+#include <wx/bitmap.h>
+#include <wx/dc.h>
+#include <wx/string.h>
+
+#define CL_TOOL_BAR_X_MARGIN 5
+#define CL_TOOL_BAR_Y_MARGIN 5
+#define CL_TOOL_BAR_DROPDOWN_ARROW_SIZE 8
+
+class WXDLLIMPEXP_SDK clToolBarButtonBase
+{
+protected:
+    clToolBar* m_toolbar;
+    wxWindowID m_id;
+    wxBitmap m_bmp;
+    wxString m_label;
+    size_t m_flags;
+    wxRect m_dropDownArrowRect;
+    wxRect m_buttonRect;
+    size_t m_renderFlags;
+
+public:
+    enum eFlags {
+        kHasMenu = (1 << 0),
+    };
+
+    enum eRenderFlags {
+        kHover = (1 << 0),
+        kPressed = (1 << 1),
+    };
+
+public:
+    clToolBarButtonBase(
+        clToolBar* parent, wxWindowID id, const wxBitmap& bmp, const wxString& label = "", size_t flags = 0);
+    virtual ~clToolBarButtonBase();
+
+public:
+    /**
+     * @brief calculate the size needed for drawing this button
+     * @return
+     */
+    virtual wxSize CalculateSize(wxDC& dc) const = 0;
+
+public:
+    /**
+     * @brief draw the button in a given wxRect
+     */
+    virtual void Render(wxDC& dc, const wxRect& rect);
+
+protected:
+    void EnableRenderFlag(clToolBarButtonBase::eRenderFlags f, bool b)
+    {
+        if(b) {
+            m_renderFlags |= f;
+        } else {
+            m_renderFlags &= ~f;
+        }
+    }
+
+public:
+    void SetBmp(const wxBitmap& bmp) { this->m_bmp = bmp; }
+    void SetLabel(const wxString& label) { this->m_label = label; }
+    const wxBitmap& GetBmp() const { return m_bmp; }
+    const wxString& GetLabel() const { return m_label; }
+
+    /**
+     * @brief does this button has a menu?
+     */
+    bool HasMenu() const { return m_flags & kHasMenu; }
+    wxWindowID GetId() const { return m_id; }
+    clToolBar* GetToolbar() { return m_toolbar; }
+
+    bool Contains(const wxPoint& pt) const { return m_buttonRect.Contains(pt); }
+    void SetRenderFlags(size_t flags) { m_renderFlags = flags; }
+    bool IsHover() const { return m_renderFlags & kHover; }
+    bool IsPressed() const { return m_renderFlags & kPressed; }
+    void SetHover(bool b)
+    {
+        ClearRenderFlags();
+        EnableRenderFlag(kHover, b);
+    }
+    void SetPressed(bool b)
+    {
+        ClearRenderFlags();
+        EnableRenderFlag(kPressed, b);
+    }
+    void ClearRenderFlags() { m_renderFlags = 0; }
+};
+
+wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_SDK, wxEVT_TOOLBAR_BUTTON_CLICKED, wxCommandEvent);
+
+#endif // CLTOOLBARBUTTONBASE_H

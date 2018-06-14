@@ -1,0 +1,47 @@
+#include "MainFrame.h"
+#include "clToolBar.h"
+#include "clToolBarButton.h"
+#include <wx/aboutdlg.h>
+#include <wx/msgdlg.h>
+
+MainFrame::MainFrame(wxWindow* parent)
+    : MainFrameBaseClass(parent)
+{
+    MyImages images;
+    m_toolbar = new clToolBar(this);
+    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_OPEN, images.Bitmap("folder"), "Folder"));
+    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_NEW, images.Bitmap("file"), "File"));
+    m_toolbar->Add(new clToolBarButton(m_toolbar, XRCID("bookmark"), images.Bitmap("bookmark"), "Bookmark"));
+    m_toolbar->Realize();
+
+    GetSizer()->Add(m_toolbar, 0, wxEXPAND, 0);
+    SetSize(600, 400);
+
+    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnFolder, this, wxID_OPEN);
+    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnFile, this, wxID_NEW);
+    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnBookmark, this, XRCID("bookmark"));
+}
+
+MainFrame::~MainFrame() {}
+
+void MainFrame::OnExit(wxCommandEvent& event)
+{
+    wxUnusedVar(event);
+    Close();
+}
+
+void MainFrame::OnAbout(wxCommandEvent& event)
+{
+    wxUnusedVar(event);
+    wxAboutDialogInfo info;
+    info.SetCopyright(_("My MainFrame"));
+    info.SetLicence(_("GPL v2 or later"));
+    info.SetDescription(_("Short description goes here"));
+    ::wxAboutBox(info);
+}
+
+void MainFrame::OnFolder(wxCommandEvent& e) { ::wxMessageBox("Folder clicked!"); }
+
+void MainFrame::OnFile(wxCommandEvent& e) { ::wxMessageBox("File clicked!"); }
+
+void MainFrame::OnBookmark(wxCommandEvent& e) { ::wxMessageBox("Bookmark clicked!"); }
