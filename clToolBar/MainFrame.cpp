@@ -3,20 +3,18 @@
 #include "clToolBarButton.h"
 #include <wx/aboutdlg.h>
 #include <wx/msgdlg.h>
-#include "clToolBarMenuButton.h"
 
 MainFrame::MainFrame(wxWindow* parent)
     : MainFrameBaseClass(parent)
 {
     MyImages images;
     m_toolbar = new clToolBar(this);
-    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_OPEN, images.Bitmap("folder")));
-    m_toolbar->Add(new clToolBarButton(m_toolbar, wxID_NEW, images.Bitmap("file")));
-    m_toolbar->Add(new clToolBarButton(m_toolbar, XRCID("bookmark"), images.Bitmap("bookmark"), "Bookmark"));
+    m_toolbar->AddButton(wxID_OPEN, images.Bitmap("folder"));
+    m_toolbar->AddButton(wxID_NEW, images.Bitmap("file"));
+    m_toolbar->AddButton(XRCID("bookmark"), images.Bitmap("bookmark"), "Bookmark");
     
     // Add button with menu
-    m_toolbar->Add(new clToolBarMenuButton(m_toolbar, XRCID("bookmark_menu"), images.Bitmap("bookmark"), "Menu!"));
-    
+    m_toolbar->AddMenuButton(XRCID("bookmark_menu"), images.Bitmap("bookmark"), "Menu!");
     m_toolbar->Realize();
 
     GetSizer()->Add(m_toolbar, 0, wxEXPAND, 0);

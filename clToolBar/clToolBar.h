@@ -30,6 +30,8 @@ public:
      * @brief add toolbar button
      */
     clToolBarButtonBase* Add(clToolBarButtonBase* button);
+    clToolBarButtonBase* AddButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
+    clToolBarButtonBase* AddMenuButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
 
     /**
      * @brief This function should be called after you have added tools.

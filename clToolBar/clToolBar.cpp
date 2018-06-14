@@ -4,6 +4,8 @@
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
+#include "clToolBarButton.h"
+#include "clToolBarMenuButton.h"
 
 #ifdef __WXGTK__
 #include <gtk/gtk.h>
@@ -173,4 +175,16 @@ void clToolBar::OnLeaveWindow(wxMouseEvent& event)
         m_buttons[i]->ClearRenderFlags();
     }
     Refresh();
+}
+
+clToolBarButtonBase* clToolBar::AddButton(wxWindowID id, const wxBitmap& bmp, const wxString& label)
+{
+    clToolBarButtonBase* button = new clToolBarButton(this, id, bmp, label);
+    return Add(button);
+}
+
+clToolBarButtonBase* clToolBar::AddMenuButton(wxWindowID id, const wxBitmap& bmp, const wxString& label)
+{
+    clToolBarButtonBase* button = new clToolBarMenuButton(this, id, bmp, label);
+    return Add(button);
 }
