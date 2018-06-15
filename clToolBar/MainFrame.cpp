@@ -14,6 +14,7 @@ MainFrame::MainFrame(wxWindow* parent)
     m_toolbar = new clToolBar(this);
     m_toolbar->AddButton(wxID_OPEN, images.Bitmap("folder"));
     m_toolbar->AddButton(wxID_NEW, images.Bitmap("file"));
+    m_toolbar->AddSeparator();
     m_toolbar->AddToggleButton(wxID_BOLD, wxNullBitmap, "Unchecked");
     m_toolbar->AddButton(XRCID("bookmark"), images.Bitmap("bookmark"), "Disabled")->Enable(false);
 

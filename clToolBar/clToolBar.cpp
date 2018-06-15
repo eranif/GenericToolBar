@@ -3,6 +3,7 @@
 #include "clToolBarButtonBase.h"
 #include "clToolBarMenuButton.h"
 #include "clToolBarToggleButton.h"
+#include "clToolBarSeparator.h"
 #include <algorithm>
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
@@ -258,4 +259,9 @@ bool clToolBar::DeleteById(wxWindowID id)
     m_buttons.erase(iter);
     Refresh();
     return true;
+}
+
+clToolBarButtonBase* clToolBar::AddSeparator()
+{
+    return Add(new clToolBarSeparator(this));
 }

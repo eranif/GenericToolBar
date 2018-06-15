@@ -48,7 +48,8 @@ public:
     clToolBarButtonBase* AddButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
     clToolBarButtonBase* AddMenuButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
     clToolBarButtonBase* AddToggleButton(wxWindowID id, const wxBitmap& bmp, const wxString& label = "");
-
+    clToolBarButtonBase* AddSeparator();
+    
     /**
      * @brief This function should be called after you have added tools.
      */
