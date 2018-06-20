@@ -373,3 +373,27 @@ void clToolBar::OnSize(wxSizeEvent& event)
 }
 
 clToolBarButtonBase* clToolBar::AddControl(wxWindow* control) { return Add(new clToolBarControl(this, control)); }
+
+int clToolBar::GetMenuSelectionFromUser(wxWindowID buttonID, wxMenu* menu)
+{
+    std::vector<clToolBarButtonBase*>::iterator iter = std::find_if(
+        m_buttons.begin(), m_buttons.end(), [&](clToolBarButtonBase* b) { return (b->GetId() == buttonID); });
+    if(iter == m_buttons.end()) { return wxID_NONE; }
+    clToolBarButtonBase* button = *iter;
+    m_popupShown = true;
+    wxPoint menuPos = button->GetButtonRect().GetBottomLeft();
+#ifdef __WXOSX__
+    menuPos.y += 5;
+#endif
+
+    int selection = GetPopupMenuSelectionFromUser(*menu, menuPos);
+    m_popupShown = false;
+
+    wxPoint pt = ::wxGetMousePosition();
+    pt = ScreenToClient(pt);
+    if(!GetClientRect().Contains(pt)) {
+        wxMouseEvent dummy;
+        OnLeaveWindow(dummy);
+    }
+    return selection;
+}

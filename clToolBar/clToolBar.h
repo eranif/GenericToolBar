@@ -128,7 +128,12 @@ public:
      * @brief show a drop down menu for a button
      */
     void ShowMenuForButton(wxWindowID buttonID, wxMenu* menu);
-
+    
+    /**
+     * @brief display a menu for a button and return the user selected menu item ID
+     */
+    int GetMenuSelectionFromUser(wxWindowID buttonID, wxMenu* menu);
+    
     /**
      * @brief find a button by ID
      */

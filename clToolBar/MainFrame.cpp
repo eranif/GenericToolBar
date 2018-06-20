@@ -77,7 +77,8 @@ void MainFrame::OnBookmarkMenuPart(wxCommandEvent& e)
     menu.Append(wxID_ABOUT);
     menu.AppendSeparator();
     menu.Append(wxID_EXIT);
-    m_toolbar->ShowMenuForButton(XRCID("bookmark_menu"), &menu);
+    int sel = m_toolbar->GetMenuSelectionFromUser(XRCID("bookmark_menu"), &menu);
+    ::wxMessageBox(wxString() << "User selected: " << (sel == wxID_NONE ? "NONE!" : "Something else"));
 }
 
 void MainFrame::OnToggleButton(wxCommandEvent& e)
