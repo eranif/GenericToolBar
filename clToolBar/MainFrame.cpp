@@ -6,6 +6,8 @@
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include "clToolBarToggleButton.h"
+#include <wx/checkbox.h>
+#include <wx/choice.h>
 
 MainFrame::MainFrame(wxWindow* parent)
     : MainFrameBaseClass(parent)
@@ -17,7 +19,15 @@ MainFrame::MainFrame(wxWindow* parent)
     m_toolbar->AddSeparator();
     m_toolbar->AddToggleButton(wxID_BOLD, wxNullBitmap, "Unchecked");
     m_toolbar->AddButton(XRCID("bookmark"), images.Bitmap("bookmark"), "Disabled")->Enable(false);
-
+    m_toolbar->AddSeparator();
+    m_toolbar->AddControl(new wxCheckBox(m_toolbar, wxID_ANY, _("Control")));
+    wxArrayString choices;
+    choices.Add("Hello");
+    choices.Add("World");
+    m_toolbar->AddControl(new wxChoice(m_toolbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices));
+    m_toolbar->AddSeparator();
+    
+    m_toolbar->ShowLabels(true);
     // Add button with menu
     clToolBarMenuButton* menuButton
         = new clToolBarMenuButton(m_toolbar, XRCID("bookmark_menu"), images.Bitmap("bookmark"), "Menu!");
@@ -27,12 +37,12 @@ MainFrame::MainFrame(wxWindow* parent)
     GetSizer()->Add(m_toolbar, 0, wxEXPAND, 0);
     SetSize(600, 400);
 
-    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnToggleButton, this, wxID_BOLD);
-    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnFolder, this, wxID_OPEN);
-    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnFile, this, wxID_NEW);
-    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnBookmark, this, XRCID("bookmark"));
-    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_CLICKED, &MainFrame::OnBookmarkMenu, this, XRCID("bookmark_menu"));
-    m_toolbar->Bind(wxEVT_TOOLBAR_BUTTON_MENU_CLICKED, &MainFrame::OnBookmarkMenuPart, this, XRCID("bookmark_menu"));
+    m_toolbar->Bind(wxEVT_TOOL, &MainFrame::OnToggleButton, this, wxID_BOLD);
+    m_toolbar->Bind(wxEVT_TOOL, &MainFrame::OnFolder, this, wxID_OPEN);
+    m_toolbar->Bind(wxEVT_TOOL, &MainFrame::OnFile, this, wxID_NEW);
+    m_toolbar->Bind(wxEVT_TOOL, &MainFrame::OnBookmark, this, XRCID("bookmark"));
+    m_toolbar->Bind(wxEVT_TOOL, &MainFrame::OnBookmarkMenu, this, XRCID("bookmark_menu"));
+    m_toolbar->Bind(wxEVT_TOOL_DROPDOWN, &MainFrame::OnBookmarkMenuPart, this, XRCID("bookmark_menu"));
 }
 
 MainFrame::~MainFrame() {}

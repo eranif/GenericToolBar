@@ -4,12 +4,16 @@
 #include "clToolBar.h"
 #include <wx/bitmap.h>
 #include <wx/dc.h>
+#include <wx/settings.h>
 #include <wx/string.h>
 
 #define CL_TOOL_BAR_X_MARGIN 5
 #define CL_TOOL_BAR_Y_MARGIN 5
+#ifdef __WXOSX__
+#define CL_TOOL_BAR_DROPDOWN_ARROW_SIZE 5
+#else
 #define CL_TOOL_BAR_DROPDOWN_ARROW_SIZE 8
-
+#endif
 class WXDLLIMPEXP_SDK clToolBarButtonBase
 {
 protected:
@@ -28,6 +32,8 @@ public:
         kToggleButton = (1 << 1),
         kChecked = (1 << 2),
         kDisabled = (1 << 3),
+        kSeparator = (1 << 4),
+        kControl = (1 << 5),
     };
 
     enum eRenderFlags {
@@ -73,6 +79,8 @@ protected:
     }
 
 public:
+    static void FillMenuBarBgColour(wxDC& dc, const wxRect& rect);
+
     void SetBmp(const wxBitmap& bmp) { this->m_bmp = bmp; }
     void SetLabel(const wxString& label) { this->m_label = label; }
     const wxBitmap& GetBmp() const { return m_bmp; }
@@ -106,7 +114,9 @@ public:
     bool IsChecked() const { return (m_flags & kChecked); }
     void Check(bool b) { EnableFlag(kChecked, b); }
     bool IsToggle() const { return (m_flags & kToggleButton); }
+    bool IsSeparator() const { return m_flags & kSeparator; }
     bool IsEnabled() const { return !(m_flags & kDisabled); }
+    bool IsControl() const { return m_flags & kControl; }
     void Enable(bool b) { EnableFlag(kDisabled, !b); }
     template <typename T>
     T* Cast()
@@ -114,8 +124,5 @@ public:
         return dynamic_cast<T*>(this);
     }
 };
-
-wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_SDK, wxEVT_TOOLBAR_BUTTON_CLICKED, wxCommandEvent);
-wxDECLARE_EXPORTED_EVENT(WXDLLIMPEXP_SDK, wxEVT_TOOLBAR_BUTTON_MENU_CLICKED, wxCommandEvent);
 
 #endif // CLTOOLBARBUTTONBASE_H

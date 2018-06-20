@@ -1,7 +1,7 @@
 #include "clToolBarSeparator.h"
 
 clToolBarSeparator::clToolBarSeparator(clToolBar* parent)
-    : clToolBarButtonBase(parent, wxID_SEPARATOR, wxNullBitmap, "", clToolBarButtonBase::kDisabled)
+    : clToolBarButtonBase(parent, wxID_SEPARATOR, wxNullBitmap, "", kDisabled | kSeparator)
 {
 }
 
@@ -14,15 +14,7 @@ wxSize clToolBarSeparator::CalculateSize(wxDC& dc) const
 
 void clToolBarSeparator::Render(wxDC& dc, const wxRect& rect)
 {
-    wxColour penColour;
-    wxColour bgColour;
-    penColour = wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR);
-    bgColour = penColour;
-
-    dc.SetBrush(bgColour);
-    dc.SetPen(penColour);
-    dc.DrawRectangle(rect);
-
+    FillMenuBarBgColour(dc, rect);
     wxCoord xx = rect.GetX();
     xx += CL_TOOL_BAR_X_MARGIN;
 
